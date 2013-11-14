@@ -1,6 +1,5 @@
 EXTRALIBDIRS := stp/src/OcamlSTP
-SOURCES := Main.ml
-PARSER := Parser.ml
+SOURCES := Main.ml Parser.ml Types.ml Constraints.ml Symbolic.ml
 OBJS := $(filter %.cmo,$(SOURCES:.ml=.cmo))
 CMIS := $(filter %.cmi,$(SOURCES:.mli=.cmi))
 CSLFLAGS := -annot $(EXTRALIBDIRS:%=-I %)
@@ -10,9 +9,6 @@ default: mycute
 
 mycute: $(OBJS)
 	ocamlc $(CSLFLAGS) $(CAMLP4_FLAGS) OcamlSTP.cma OcamlSTPunsafe.cma Parser.cmo $^ -o mycute
-
-parser.cmo parser.cmi: $(PARSER)
-	ocamlc $(CAMLP4_FLAGS) -c $^
 
 $(OBJS) $(CMIS) : stp $(wildcard $(EXTRALIBDIRS) $(EXTRALIBDIRS:%=%/*))
 
@@ -37,7 +33,7 @@ distclean realclean: clean
 	ocamlc $(CSLFLAGS) $(CAMLP4_FLAGS) -c $< -o $@
 
 .dep: $(PARSER) $(SOURCES)
-	ocamldep *.ml* > .dep
+	ocamldep $(CAMLP4_FLAGS) *.ml* > .dep
 
 depend: .dep
 
