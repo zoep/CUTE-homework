@@ -3,18 +3,6 @@ open Types
 exception Misprediction
 exception Completed
 
-type symExpr =
-    | Symvar of symvar
-    | Symop of bop * symExpr * symExpr 
-    | Symneg of symvar
-    | Concrete of int
-
-and size = int 
-
-type predicate = 
-  | Predicate of rop * symExpr * symExpr
-  | Constant of bool
-
 let negateRop = function
     LT -> GE
   | LE -> GT
@@ -85,7 +73,7 @@ let compare_and_update_stack id taken k =
     in
       add_to_stack c
       
-let solve_path_constraint k = 
+let rec solve_path_constraint k symVars = 
   let rec choose_cond i =
     if (i = -1) then i
     else 
@@ -99,12 +87,10 @@ let solve_path_constraint k =
   	begin
       path_c.(j) <- negate path_c.(j);
       stack.(j).taken <- not (stack.(j).taken);
-      match solve j with 
+      match Solver.solve j path_c symVars with 
         | Some sol ->
           (sol, j)
         | None ->
-          solve_path_constraint j
+          solve_path_constraint j symVars
      end
-    
-  
-  
+

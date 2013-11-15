@@ -7,7 +7,8 @@ let main =
   let () = close_in stack_file in
   let stack_file = open_out "stack" in
   let () = List.iter Symbolic.execute_symbolic parsed in
-  match (try Some (Constraints.solve_path_constraint Constraints.cond_no)
+  let symVars = Symbolic.get_symVars () in
+  match (try Some (Constraints.solve_path_constraint Parser.cond_no symVars)
          with Constraints.Completed -> None) with 
     | Some (solution, j) ->
         Constraints.output_stack j stack_file;

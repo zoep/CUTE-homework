@@ -1,8 +1,4 @@
 open Types 
-  
-
-let width = 64 
-
 
 (* Holds (address, expr) *)
 let env = Hashtbl.create 101
@@ -13,15 +9,17 @@ let sym_vars = ref []
 
 let add_symVar s = sym_vars := s :: (!sym_vars)
 
-let execute_symbolic instr_node =
-  match instr_node.instr with
+let get_symVars () = !sym_vars
+
+let execute_symbolic instr =
+  match instr with
     | Assign ((_, _), Lvalue (0, _)) -> ()
     | Assign ((m1, _), Lvalue (m2, _)) ->
         (match (try Some (Hashtbl.find env m2) with Not_found -> None) with 
           | Some v -> Hashtbl.add env m1 v
           | None -> Hashtbl.remove env m1)
     | Assign ((m1, _), Neg (0, _)) -> ()
-    | Assign ((m1, _), Neg (m2, _)) -> ()
+    | Assign ((m1, _), Neg (m2, _)) ->
         (match (try Some (Hashtbl.find env m2) with Not_found -> None) with 
           | Some v -> Hashtbl.add env m1 (Symneg v)
           | None -> Hashtbl.remove env m1)
@@ -69,7 +67,7 @@ let execute_symbolic instr_node =
    | Assign ((m1, _), Symbvalue (ty, symvar)) ->
          Hashtbl.add env m1 (Symvar symvar);
          add_symVar (symvar, ty)
-   | Branch (taken, id, Cond (rop, ((m1, cv1), (m2, cv2)))) ->
+   | Branch (taken, id, Cond (rop, (m1, cv1), (m2, cv2))) ->
        let rop = if taken then rop else Constraints.negateRop rop in
        let pred = 
          (match (try Some (Hashtbl.find env m1) with Not_found -> None,

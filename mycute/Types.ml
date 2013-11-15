@@ -32,3 +32,13 @@ and typ =
 and address = int
 
 and value = int
+
+type symExpr =
+    | Symvar of symvar
+    | Symop of bop * symExpr * symExpr 
+    | Symneg of symExpr (*changed this from symvar *)
+    | Concrete of int
+
+type predicate = 
+  | Predicate of rop * symExpr * symExpr
+  | Constant of bool
