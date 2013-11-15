@@ -1,5 +1,5 @@
 EXTRALIBDIRS := stp/src/OcamlSTP
-SOURCES := Main.ml Parser.ml Types.ml Constraints.ml Symbolic.ml
+SOURCES := Main.ml Parser.ml Types.ml Constraints.ml Symbolic.ml Solver.ml
 OBJS := $(filter %.cmo,$(SOURCES:.ml=.cmo))
 CMIS := $(filter %.cmi,$(SOURCES:.mli=.cmi))
 CSLFLAGS := -annot $(EXTRALIBDIRS:%=-I %)

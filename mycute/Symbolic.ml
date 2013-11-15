@@ -1,44 +1,7 @@
 open Types 
-open OcamlSTP
   
 
 let width = 64 
-
-module Stp = OcamlSTP;;
-   
-(*
-let opOfBop = function
-  | Plus -> Stp.bv_add 
-  | Minus -> Stp.bv_sub 
-  | Mult -> Stp.bv_mult
-  
-let opOfRop = function
-  | LT -> Stp.bv_signed_lt
-  | LE -> Stp.bv_signed_le
-  | GT -> Stp.bv_signed_gt
-  | GE -> Stp.bv_signed_ge
-  | EQ -> Stp.bv_signed_eq
-  | NEQ -> (fun ctx x y -> Stp.bool_not ctx (Stp.bv_signed_eq ctx x y))
-
-let rec bvOfSymExpr = function
-    Symvar id -> 
-    Stp.bv_var ctx id width
-  | Symop of (bop, symExpr1, symExpr2) ->
-    let v1 = bvOfSymExpr symExpr1 in
-    let v2 = bvOfSymExpr symExpr2 in
-      opOfBop bop ctx v1 v2 
-  | Concrete i ->
-    Stp.bv_of_int ctx width i 
-    
-let solveConstraints cnstr = 
-  let cf = List.fold_left (* conjuctive form of the constraints *)
-      (fun acc (Predicate (rop, symExpr1, symExpr2)) ->
-        let v1 = bvOfSymExpr symExpr1 in
-        let v2 = bvOfSymExpr symExpr2 in
-        let c = opOfRop rop ctx v1 v2 in
-         Stp.bool_and ctx c acc
-      ) (Stp.bool_true ctx) cnstr
-*)
 
 
 (* Holds (address, expr) *)
@@ -131,6 +94,3 @@ let execute_symbolic instr_node =
          Constraints.addPathConstraint !path_cnt pred;
          Constraints.compare_and_update_stack id taken !path_cnt
          incr path_cnt
-
-
-
