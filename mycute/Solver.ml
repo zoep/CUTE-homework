@@ -4,7 +4,7 @@ module Stp = OcamlSTP;;
 
 let ctx = Stp.make_context ();;
 
-let width = 64 
+let width = 63 
 
 let opOfBop = function
   | Plus -> Stp.bv_add ctx
@@ -60,7 +60,7 @@ let minMaxType = function
 let output_solution solution out_file =
   Printf.fprintf out_file "sat\n";
   List.iter (fun (x, y) ->
-    Printf.fprintf out_file "(= %s %d)\n" x y) solution
+    Printf.fprintf out_file "(= %s %d)\n" x y) (List.rev solution)
 
 let solve j path_c symVars = 
   let expr = List.fold_left 
